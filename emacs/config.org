@@ -23,7 +23,12 @@ Just some nice user interfaces tweaks. Bread and butter stuff!
 
 * General
 #+BEGIN_SRC emacs-lisp
- ;; OSX fix for eslint lookup
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files 
+(show-paren-mode 1)
+
+;; OSX fix for eslint lookup
+
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -229,7 +234,7 @@ Everybody uses JSON now, this make things look very pretty
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
 #+END_SRC
 
-
+   
 * Modes
 ** RJSX mode 
 inherits js2-mode and supports jsx well. In my experience it's better than js2-jsx-mode, so I use it instead.
@@ -368,6 +373,16 @@ Awesome package for key discovery!
   :ensure t
   :config
   (which-key-mode))
+#+END_SRC
+
+
+** Web-Beautify 
+Beautify All The Things
+#+BEGIN_SRC emacs-lisp
+(use-package web-beautify
+  :ensure t
+  :config
+  )
 #+END_SRC
 
 
