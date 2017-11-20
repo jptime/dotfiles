@@ -113,8 +113,11 @@ If the universal prefix argument is used then will the windows too."
 (use-package company
   :ensure t
   :config 
-  (add-hook 'prog-mode-hook 'global-company-mode)
-  (setq company-tooltip-align-annotations t))
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-tooltip-align-annotations t)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 2)
+)
 #+END_SRC  
 
 
@@ -262,7 +265,8 @@ We also integrate with Tide here, so that we can jump back and forth across defi
   :config
   (evil-leader/set-key-for-mode 'rjsx-mode
     "mf" 'tide-jump-to-definition
-    "mb" 'tide-jump-back)
+    "mb" 'tide-jump-back
+    "mk" 'eslint-fix-file)
   (setq js2-basic-offset 2)
   (define-key evil-insert-state-map (kbd "C-d") nil)
   (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
@@ -317,7 +321,6 @@ I try to use org files where possible, but markdown is super useful sometimes fo
 
 * Tools
 ** SmartParens
-
 #+BEGIN_SRC emacs-lisp
    (use-package smartparens
    :ensure t
@@ -394,7 +397,6 @@ Awesome package for key discovery!
   (which-key-mode))
 #+END_SRC
 
-
 ** Web-Beautify 
 Beautify All The Things
 #+BEGIN_SRC emacs-lisp
@@ -406,8 +408,7 @@ Beautify All The Things
 
 
 * Fun Stuff
-
-
+#+BEGIN_SRC emacs-lisp
 (use-package alert
   :commands (alert)
   :init
