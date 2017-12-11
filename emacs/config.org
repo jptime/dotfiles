@@ -24,11 +24,18 @@ Just some nice user interfaces tweaks. Bread and butter stuff!
     (powerline-center-evil-theme))
 
 
+(set-face-attribute 'default nil
+                    :family "Inconsolata"
+                    :height 160
+                    :weight 'normal
+                    :width 'normal)
+
 #+END_SRC
 
 
 * General
 #+BEGIN_SRC emacs-lisp
+
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files 
 (show-paren-mode 1)
@@ -91,8 +98,8 @@ If the universal prefix argument is used then will the windows too."
   (add-hook 'prog-mode-hook 'flycheck-mode)
   (setq-default flycheck-disabled-checker 'javascript-jshint)
   (setq-default flycheck-disabled-checker 'json-jsonlist)
-  (setq-default flycheck-disabled-checker 'javascript-eslint)
-  (setq-default flycheck-javascript-eslint-executable "eslint-project-relative")
+  ;; (setq-default flycheck-disabled-checker 'javascript-eslint)
+  ;; (setq-default flycheck-javascript-eslint-executable "eslint-project-relative")
   (flycheck-add-mode 'javascript-eslint 'web-mode)
 )
 
