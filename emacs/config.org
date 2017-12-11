@@ -232,7 +232,9 @@ Our favourite languages!
 Everybody uses JSON now, this make things look very pretty
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
-  :ensure t)
+  :ensure t
+  :config
+)
 #+END_SRC
 
 ** C++
@@ -244,6 +246,12 @@ Everybody uses JSON now, this make things look very pretty
   (define-key irony-mode-map [remap complete-symbol]
     'irony-completion-at-point-async))
 
+;; Fix for irony mode errors in php-mode
+(defun my-irony-mode-on ()
+  ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: php-mode
+  (when (member major-mode irony-supported-major-modes)
+    (irony-mode 1)))
+
 (use-package irony
   :ensure t
   :config
@@ -253,8 +261,8 @@ Everybody uses JSON now, this make things look very pretty
       :config
       (add-to-list 'company-backends 'company-irony))
     (add-hook 'irony-mode-hook 'electric-pair-mode)
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'irony-mode 'my-irony-mode-on)
+    (add-hook 'c-mode-hook 'irony-mode 'my-irony-mode-on)
     (add-hook 'irony-mode-hook 'my-irony-mode-hook)
     (add-hook 'irony-mode-hook 'company-irony-setup-begin-commands)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
@@ -325,7 +333,43 @@ I try to use org files where possible, but markdown is super useful sometimes fo
   :commands (markdown-mode))
 #+END_SRC 
 
+** Php
+#+BEGIN_SRC EMACS-LISP
+(use-package php-mode
+  :recipe (:host github
+                :repo "ejmr/php-mode"
+                :files ("php-mode.el," "skeleton/*")
+)
+  :ensure t
+  :config
+(defun setup-php-mode ()
+  (when (member major-mode irony-supported-major-modes)
+    (irony-mode 1)))
 
+    (add-hook 'php-mode #'setup-php-mode)
+  :catch (lambda (keyword err)
+            (message (error-message-string err)))
+)
+(use-package company-php
+  :ensure t
+  :after php-mode
+  :config
+  (add-to-list 'company-backends 'company-ac-php-backend))
+#+END_SRC 
+
+** SASS
+
+#+BEGIN_SRC EMACS-LISP
+(use-package sass-mode
+  :commands sass-mode)
+
+(use-package scss-mode
+  :commands scss-mode
+  :init
+  (setq-default scss-compile-at-save nil))
+#+END_SRC 
+
+   
 * Tools
 ** SmartParens
 #+BEGIN_SRC emacs-lisp
