@@ -336,10 +336,6 @@ I try to use org files where possible, but markdown is super useful sometimes fo
 ** Php
 #+BEGIN_SRC EMACS-LISP
 (use-package php-mode
-  :recipe (:host github
-                :repo "ejmr/php-mode"
-                :files ("php-mode.el," "skeleton/*")
-)
   :ensure t
   :config
 (defun setup-php-mode ()
