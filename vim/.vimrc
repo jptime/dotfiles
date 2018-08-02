@@ -17,16 +17,20 @@ Plugin 'VundleVim/Vundle.vim'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
+
+" Formatting
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-surround'
 Plugin 'kien/ctrlp.vim'
 Plugin 'bling/vim-airline'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'valloric/youcompleteme'
+" Syntax
+Plugin 'w0rp/ale'
+" Javascript
 Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
 Plugin 'ernstvanderlinden/vim-coldfusion'
 Plugin 'othree/html5.vim'
 Plugin 'christoomey/vim-tmux-navigator'
@@ -68,3 +72,4 @@ map <C-n> :NERDTreeToggle<CR>
 
 let g:jsx_ext_required = 0
 
+nnoremap <space>

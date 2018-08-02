@@ -1,5 +1,3 @@
-
-
 * Personal Info
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "John Petty"
@@ -13,7 +11,8 @@ Just some nice user interfaces tweaks. Bread and butter stuff!
 (global-linum-mode 1)
 (scroll-bar-mode -1)
 (setq inhibit-startup-message t)
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode t)
+(setq tab-width 2)
 (setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -25,7 +24,7 @@ Just some nice user interfaces tweaks. Bread and butter stuff!
 
 
 (set-face-attribute 'default nil
-                    :family "Inconsolata"
+                    :family "Menlo"
                     :height 160
                     :weight 'normal
                     :width 'normal)
@@ -130,7 +129,7 @@ If the universal prefix argument is used then will the windows too."
 
 * Theme
 #+begin_src emacs-lisp
-(use-package dracula-theme
+(use-package color-theme-sanityinc-tomorrow 
   :if (window-system)
   :ensure t
   :init
@@ -268,7 +267,72 @@ Everybody uses JSON now, this make things look very pretty
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
 #+END_SRC
 
+** Lua
+#+BEGIN_SRC emacs-lisp
+
+(use-package lua-mode 
+  :ensure t
+  :config
+    (defun run-in-love()
+    "Auto Run on save in love"
+    (when (eq major-mode 'lua-mode)
+	(shell-command-to-string (format "love ."))))
+
+    (add-hook 'after-save-hook #'run-in-love)
+ )  
+#+END_SRC
    
+   ** 
+
+** GoLang
+#+BEGIN_SRC emacs-lisp
+
+;; Snag the user's PATH and GOPATH
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
+
+;; Define function to call when go-mode loads
+(defun my-go-mode-hook ()
+  (add-hook 'before-save-hook 'gofmt-before-save) ; gofmt before every save
+  (setq gofmt-command "goimports")                ; gofmt uses invokes goimports
+  (if (not (string-match "go" compile-command))   ; set compile command default
+      (set (make-local-variable 'compile-command)
+           "go build -v && go test -v && go vet"))
+
+  ;; guru settings
+  (go-guru-hl-identifier-mode)                    ; highlight identifiers
+  
+  ;; Key bindings specific to go-mode
+  (evil-leader/set-key
+  "." 'godef-jump         ; Go to definition
+  "*" 'pop-tag-mark       ; Return from whence you came
+  "p" 'compile            ; Invoke compiler
+  "P" 'recompile          ; Redo most recent compile cmd
+)
+
+  ;; Misc go stuff
+  (auto-complete-mode 1))                         ; Enable auto-complete mode
+
+;; Connect go-mode-hook with the function we just defined
+(use-package go-mode 
+  :ensure t
+  :config
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+)
+
+;; Ensure the go specific autocomplete is active in go-mode.
+(with-eval-after-load 'go-mode
+   (require 'go-autocomplete))
+
+;; If the go-guru.el file is in the load path, this will load it.
+
+(use-package go-guru
+  :ensure t
+  :config
+(require 'go-guru)
+)
+#+END_SRC
 * Modes
 ** RJSX mode 
 inherits js2-mode and supports jsx well. In my experience it's better than js2-jsx-mode, so I use it instead.
@@ -281,7 +345,7 @@ We also integrate with Tide here, so that we can jump back and forth across defi
   (evil-leader/set-key-for-mode 'rjsx-mode
     "mf" 'tide-jump-to-definition
     "mb" 'tide-jump-back
-    "mk" 'eslint-fix-file)
+    "mk" 'eslint-fix-file-and-revert)
   (setq js2-basic-offset 2)
   (define-key evil-insert-state-map (kbd "C-d") nil)
   (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
